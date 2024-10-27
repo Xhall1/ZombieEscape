@@ -14,6 +14,11 @@ public class Window extends javax.swing.JFrame {
 
     int x;
     int y;
+    int xFoot;
+    int yFoot;
+    int yInicioPuente;
+    int yFinalPuente;
+    boolean permitirMovimiento;
 
     public Window() {
         initComponents();
@@ -21,6 +26,14 @@ public class Window extends javax.swing.JFrame {
         startZombieMovement();
         x = player.getX();
         y = player.getY();
+        xFoot = playerFoot.getX();
+        yFoot = playerFoot.getY();
+
+        yInicioPuente = 430;
+        yFinalPuente = 360;
+
+        gameover.setVisible(false);
+        win.setVisible(false);
     }
 
     private void startZombieMovement() {
@@ -38,6 +51,7 @@ public class Window extends javax.swing.JFrame {
     }
 
     private void moveZombie() {
+        checkCollisionZombie();
         int x = zombie1.getX();
         if (zombieMovingRight) {
             if (x < getWidth() - zombie1.getWidth()) {
@@ -63,13 +77,19 @@ public class Window extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        win = new javax.swing.JLabel();
         gameover = new javax.swing.JLabel();
         player = new javax.swing.JLabel();
         zombie1 = new javax.swing.JLabel();
         hole2 = new javax.swing.JPanel();
         hole1 = new javax.swing.JPanel();
         stage = new javax.swing.JLabel();
+        playerFoot = new javax.swing.JPanel();
+        bottomWall = new javax.swing.JPanel();
+        rightWall = new javax.swing.JPanel();
+        gasStation = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addKeyListener(new java.awt.event.KeyAdapter() {
@@ -79,8 +99,11 @@ public class Window extends javax.swing.JFrame {
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        win.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/resources/win.png"))); // NOI18N
+        getContentPane().add(win, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
         gameover.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/resources/died.png"))); // NOI18N
-        getContentPane().add(gameover, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        getContentPane().add(gameover, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 350, -1));
 
         player.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/resources/Player.png"))); // NOI18N
         getContentPane().add(player, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 480, -1, -1));
@@ -94,14 +117,14 @@ public class Window extends javax.swing.JFrame {
         hole2.setLayout(hole2Layout);
         hole2Layout.setHorizontalGroup(
             hole2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 70, Short.MAX_VALUE)
+            .addGap(0, 60, Short.MAX_VALUE)
         );
         hole2Layout.setVerticalGroup(
             hole2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 60, Short.MAX_VALUE)
         );
 
-        getContentPane().add(hole2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 370, 70, 60));
+        getContentPane().add(hole2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 370, 60, 60));
 
         hole1.setBackground(new java.awt.Color(0, 0, 0));
 
@@ -121,7 +144,59 @@ public class Window extends javax.swing.JFrame {
         stage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/resources/stage2.png"))); // NOI18N
         getContentPane().add(stage, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        javax.swing.GroupLayout playerFootLayout = new javax.swing.GroupLayout(playerFoot);
+        playerFoot.setLayout(playerFootLayout);
+        playerFootLayout.setHorizontalGroup(
+            playerFootLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        playerFootLayout.setVerticalGroup(
+            playerFootLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(playerFoot, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 540, 30, 10));
+
+        javax.swing.GroupLayout bottomWallLayout = new javax.swing.GroupLayout(bottomWall);
+        bottomWall.setLayout(bottomWallLayout);
+        bottomWallLayout.setHorizontalGroup(
+            bottomWallLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 210, Short.MAX_VALUE)
+        );
+        bottomWallLayout.setVerticalGroup(
+            bottomWallLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(bottomWall, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 210, 30));
+
+        javax.swing.GroupLayout rightWallLayout = new javax.swing.GroupLayout(rightWall);
+        rightWall.setLayout(rightWallLayout);
+        rightWallLayout.setHorizontalGroup(
+            rightWallLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        rightWallLayout.setVerticalGroup(
+            rightWallLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 110, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(rightWall, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 60, 30, 110));
+
+        gasStation.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout gasStationLayout = new javax.swing.GroupLayout(gasStation);
+        gasStation.setLayout(gasStationLayout);
+        gasStationLayout.setHorizontalGroup(
+            gasStationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 30, Short.MAX_VALUE)
+        );
+        gasStationLayout.setVerticalGroup(
+            gasStationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 60, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(gasStation, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 30, 60));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -131,33 +206,117 @@ public class Window extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 160, Short.MAX_VALUE)
+            .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 220, 160));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 220, 30));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 40, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 40, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
-            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            checkWall();
+            yFoot = yFoot - 10;
             y = y - 10;
+            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+            checkHole();
+            checkGasStation();
+
         }
         if (evt.getKeyCode() == KeyEvent.VK_DOWN) {
-            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            checkWall();
+            yFoot = yFoot + 10;
             y = y + 10;
+            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+            checkHole();
+            checkGasStation();
+
         }
         if (evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+            checkWall();
+            xFoot = xFoot + 10;
+            x = x + 10;
             player.setBounds(x, y, player.getWidth(), player.getHeight());
-            x = x+10;
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+            checkHole();
+            checkGasStation();
+
         }
         if (evt.getKeyCode() == KeyEvent.VK_LEFT) {
+            checkWall();
+            xFoot = xFoot - 10;
+            x = x - 10;
             player.setBounds(x, y, player.getWidth(), player.getHeight());
-            x = x-10;
-        }
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+            checkHole();
+            checkGasStation();
 
+        }
     }//GEN-LAST:event_formKeyPressed
+
+    public void checkHole() {
+        if (playerFoot.getBounds().intersects(hole1.getBounds())) {
+            gameover.setVisible(true);
+            player.setVisible(false);
+            gameover.repaint();
+        }
+        if (playerFoot.getBounds().intersects(hole2.getBounds())) {
+            gameover.setVisible(true);
+            player.setVisible(false);
+            gameover.repaint();
+        }
+    }
+
+    public void checkCollisionZombie() {
+        if (player.getBounds().intersects(zombie1.getBounds())) {
+            gameover.setVisible(true);
+            player.setVisible(false);
+            gameover.repaint();
+        }
+    }
+
+    public void checkGasStation() {
+        if (playerFoot.getBounds().intersects(gasStation.getBounds())) {
+            win.setVisible(true);
+            player.setVisible(false);
+            win.repaint();
+        }
+    }
+
+    public void checkWall() {
+        if (playerFoot.getBounds().intersects(rightWall.getBounds())) {
+            x = jPanel2.getX();
+            y = jPanel2.getY();
+            xFoot = jPanel2.getX();
+            yFoot = jPanel2.getY();
+            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+        }
+        if (playerFoot.getBounds().intersects(bottomWall.getBounds())){
+            x = jPanel1.getX();
+            y = jPanel1.getY();
+            xFoot = jPanel1.getX();
+            yFoot = jPanel1.getY();
+            player.setBounds(x, y, player.getWidth(), player.getHeight());
+            playerFoot.setBounds(xFoot, yFoot, playerFoot.getWidth(), playerFoot.getHeight());
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -195,14 +354,19 @@ public class Window extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel bottomWall;
     private javax.swing.JLabel gameover;
+    private javax.swing.JPanel gasStation;
     private javax.swing.JPanel hole1;
     private javax.swing.JPanel hole2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel player;
+    private javax.swing.JPanel playerFoot;
+    private javax.swing.JPanel rightWall;
     private javax.swing.JLabel stage;
+    private javax.swing.JLabel win;
     private javax.swing.JLabel zombie1;
     // End of variables declaration//GEN-END:variables
-
 
 }
